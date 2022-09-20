@@ -1,0 +1,2 @@
+const mapboxApiKey = "pk.eyJ1Ijoic3plZGFubiIsImEiOiJja214YWxtczIwbGl5MnBwZnhtaXR2bTVsIn0.HHNsdy_93e7bHl9yN2k_jg"
+const weatherApiKey = "DQ2FNSBDB8VGKVR2M8FG9Q8SU"

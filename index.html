@@ -20,10 +20,10 @@
                     <input type="text" id="location" placeholder="Warszawa">
                     <input type="button" id="saveLoc" value="Zapisz">
                 </div>
-                <div id='locChangeMap' style='height: 200px;'></div>
+                <div id='locChangeMap'></div>
                 <script>
                 mapboxgl.accessToken = mapboxApiKey;
-                let locChangeMap = new mapboxgl.Map({
+                const locChangeMap = new mapboxgl.Map({
                     container: 'locChangeMap',
                     style: 'mapbox://styles/szedann/cl88x9b2z004w15p1w6dn91t7'
                 });
@@ -44,6 +44,7 @@
                 <div id="currentWindSpeed">🍃--km/h</div>
                 <div id="currentUVIndex">☀️--</div>
             </div>
+            <div id="currentMap"></div>
         </div>
         <div id="forecastSlider"></div>
         <div class="navButtons">

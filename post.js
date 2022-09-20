@@ -41,14 +41,28 @@ setInterval(updateTime, 1000)
 
 const updateWeather = async () => {
     const weather = await getWeather(loc)
+    console.log(weather)
     // document.getElementById("current").style.backgroundImage = `url("./conditionImages/${weather.currentConditions.icon}.jpg")`
     document.getElementById("currentTemp").innerText = `${Math.round(weather.currentConditions.temp)}°C`
     document.getElementById("currentConditions").innerText = weather.currentConditions.conditions
     document.getElementById("currentHumidity").innerText = `${Math.round(weather.currentConditions.humidity)}% 💧`
     document.getElementById("currentWindSpeed").innerText = `${Math.round(weather.currentConditions.windspeed)}km/h 🍃`
     document.getElementById("currentUVIndex").innerText = `${weather.currentConditions.uvindex} ☀️`
+    const coords = [weather.latitude, weather.longitude]
+    let currentMap = new mapboxgl.Map({
+        container: 'currentMap',
+        style: 'mapbox://styles/szedann/cl88x9b2z004w15p1w6dn91t7',
+        center: [coords[1]+.3, coords[0]],
+        zoom: 8,
+        interactive: false
+    });
+
+
+
     const forecastSlider = document.getElementById("forecastSlider")
     document.getElementById("navButtons").innerHTML = ""
+    forecastSlider.innerHTML = ""
+
     for(const index in weather.days){
         const day = weather.days[index]
         const t = new Date(day.datetime)
@@ -84,12 +98,15 @@ const updateWeather = async () => {
         radio.type = "radio"
         radio.value = index
         radio.name = "selectedDay"
-        radio.onclick = () => selectDay(index)
+        radio.onclick = (e) => {
+            e.preventDefault()
+            selectDay(index)
+        }
         document.getElementById("navButtons").appendChild(radio)
-
     }
     
     selectDay(0)
+    document.getElementById("navButtons").children.item(0).checked = true
 }
 
 const selectDay = (d)=>{
@@ -97,30 +114,13 @@ const selectDay = (d)=>{
     const l = document.getElementById("forecastSlider").children.length
     if(day>=l) day = 0
     if(day<0) day = l-1
-    document.getElementById("navButtons").children.item(day)
-    document.getElementById("navButtons").children.item(day).checked = true
-    for (let i = 0; i < l; i++) {
-        document.getElementById("forecastSlider").children.item(i).style.display = "none"
-    }
-    document.getElementById("forecastSlider").children.item(day).style.display = "flex"
-    selectedDay = day
+    document.getElementById("forecastSlider").scrollTo({left: document.getElementById("forecastSlider").children.item(0).clientWidth*day, behavior: 'smooth'})
 }
 
-const nextDay = () => {
-    if(selectedDay+1==document.getElementById("forecastSlider").children.length) return selectDay(0)
-    document.getElementById("forecastSlider").children.item(selectedDay+1).style.display = "flex"
-    document.getElementById("forecastSlider").scrollTo({left: 1000, behavior: "smooth"})
-    setTimeout(()=>selectDay(selectedDay+1), 500)
+const nextDay = () => selectDay(selectedDay+1)
     
-}
-const prevDay = () => {
-    if(selectedDay == 0) return selectDay(selectedDay-1)
-    document.getElementById("forecastSlider").children.item(selectedDay-1).style.display = "flex"
-    document.getElementById("forecastSlider").scrollTo({left: 1000, behavior: "auto"})
-    document.getElementById("forecastSlider").scrollTo({left: 0, behavior: "smooth"})
-    setTimeout(()=>selectDay(selectedDay-1), 500)
+const prevDay = () => selectDay(selectedDay-1)
 
-}
 
 let touchstartX = 0
 let touchendX = 0
@@ -143,5 +143,13 @@ element.addEventListener('touchend', e => {
 
 getLoc().then(()=>{
     updateWeather()
-    setInterval(updateWeather, 600000)
+    setInterval(updateWeather, 10 * 60 * 1000)
 })
+
+document.getElementById("forecastSlider").onscroll = (e)=>{
+    const scroll = e.target.scrollLeft
+    const elementWidth = document.getElementById("forecastSlider").children.item(0).clientWidth
+    const element = Math.round(scroll/elementWidth)
+    selectedDay = element
+    document.getElementById("navButtons").children.item(element).checked = true
+}

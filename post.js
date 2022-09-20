@@ -12,7 +12,7 @@ const updateTime = () =>{
 }
 
 locChangeMap.on("click", e=>{
-    document.getElementById("location").value = `${e.lngLat.lng}, ${e.lngLat.lat}`
+    document.getElementById("location").value = `${e.lngLat.lat}, ${e.lngLat.lng}`
 })
 
 const updateLoc = ()=>{

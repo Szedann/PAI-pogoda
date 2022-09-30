@@ -49,9 +49,10 @@ const updateWeather = async () => {
     document.getElementById("currentWindSpeed").innerText = `${Math.round(weather.currentConditions.windspeed)}km/h 🍃`
     document.getElementById("currentUVIndex").innerText = `${weather.currentConditions.uvindex} ☀️`
     const coords = [weather.latitude, weather.longitude]
+    mapboxgl.accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA"
     let currentMap = new mapboxgl.Map({
         container: 'currentMap',
-        style: 'mapbox://styles/szedann/cl88x9b2z004w15p1w6dn91t7',
+        style: 'mapbox://styles/mapbox/satellite-v9',
         center: [coords[1]+.3, coords[0]],
         zoom: 8,
         interactive: false
